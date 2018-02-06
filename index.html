@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+</head>
+<body>
+
+
+    <div id="app" @addItem="addTodo">
+
+        <input-field :value="value"></input-field>
+
+        <todo-list :todos="todosArr"></todo-list>
+
+    </div>
+
+    <script>
+
+        Vue.component('input-field', {
+            template: `<div>
+                <input type="text" name="message"  v-model="value" placeholder="defaultText" />
+                <button v-on:click="emmitAddItem">ADD</button>
+            </div>`,
+            data: function() {
+                return {
+                  value: ''
+                };
+            },
+            props: [
+                'value'
+            ],
+            methods: {
+                emmitAddItem: function() {
+                    this.$emit('addItem', {
+                        text: this.value
+                    });
+                },
+            }
+        });
+
+        Vue.component('todo-item', {
+            template: '<li>{{text}}</li>',
+            props: [
+                'text'
+            ]
+        });
+
+        Vue.component('todo-list', {
+            template: '<ul v-for="(todo, index) in todos" :key="index">' +
+            '   <todo-item :text="todo.text"></todo-item>' +
+            '</ul>',
+            props: [
+                'todos'
+            ],
+            components: [
+
+            ]
+        });
+
+
+
+        let vm = new Vue({
+           el: '#app',
+           data: function() {
+               return {
+                 value : 'Andrew',
+                 defaultText: 'Enter some todo',
+                 todosArr: [{
+                     text: 'one'
+                 },{
+                     text: 'two'
+                 }]
+               };
+           },
+            methods: {
+                addTodo: function(item) {
+                    this.todosArr.push(item)
+                }
+            }
+        });
+
+    </script>
+
+</body>
+</html>
